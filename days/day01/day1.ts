@@ -1,4 +1,4 @@
-export function run(input: string) {
+const parselists = (input: string): [Array<number>, Array<number>] => {
   const unsortedLists = input.split('\n')
     .map(line => {
       const numbers = line.match(/(\d+)\s+(\d+)/)
@@ -16,6 +16,15 @@ export function run(input: string) {
   const list1 = unsortedLists[0].toSorted();
   const list2 = unsortedLists[1].toSorted();
 
+  return [unsortedLists[0], unsortedLists[1]];
+}
+
+export function run(input: string): number {
+  const unsortedLists = parselists(input);
+
+  const list1 = unsortedLists[0].toSorted();
+  const list2 = unsortedLists[1].toSorted();
+
   let total = 0;
 
   list1.forEach((item, index) => {
@@ -23,4 +32,23 @@ export function run(input: string) {
   });
 
   return total;
+}
+
+export function runAgain(input: string): number {
+  const [list1, list2] = parselists(input);
+
+  const list2Lookup = list2.reduce((lookup, item) => {
+    lookup[item] ||= 0;
+    lookup[item] += 1;
+    return lookup;
+  }, {} as Record<number, number>)
+
+  let score = 0;
+
+  for (const item of list1) {
+    const itemScore = item * (list2Lookup[item] ?? 0);
+    score += itemScore
+  }
+  
+  return score;
 }
