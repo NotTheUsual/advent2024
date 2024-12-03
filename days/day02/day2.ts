@@ -30,3 +30,19 @@ export function run(input: string): number {
   const reports = parseInput(input);
   return reports.filter(isSafe).length;
 }
+
+const isReallySafe = (report: Array<number>): boolean => {
+  if (isSafe(report)) return true;
+
+  for (let index = 0; index < report.length; index += 1) {
+    const smallerReport = report.toSpliced(index, 1);
+    if (isSafe(smallerReport)) return true;
+  }
+
+  return false;
+}
+
+export function runAgain(input: string): number {
+  const reports = parseInput(input);
+  return reports.filter(isReallySafe).length;
+}
