@@ -8,5 +8,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "test": "bun test --watch",
+    "new-day": "bun ./scripts/newDay.ts"
   }
 }
