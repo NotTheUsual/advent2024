@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { run, runAgain } from './day2';
 import day2Input from './day2.input';
 

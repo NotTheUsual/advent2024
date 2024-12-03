@@ -1,9 +1,8 @@
 const parseInput = (input: string): Array<Array<number>> => {
-  return input.split('\n')
-    .map((line: string) => {
-      return line.split(' ').map(number => parseInt(number));
-    });
-}
+  return input.split('\n').map((line: string) => {
+    return line.split(' ').map((number) => Number.parseInt(number));
+  });
+};
 
 const isSafe = (report: Array<number>): boolean => {
   let previousChange: 'increase' | 'decrease' | undefined;
@@ -12,7 +11,7 @@ const isSafe = (report: Array<number>): boolean => {
     const level = report[index];
     const previousLevel = report[index - 1];
     const difference = level - previousLevel;
-    
+
     if (difference === 0) return false;
     if (Math.abs(difference) > 3) return false;
     if (previousChange) {
@@ -23,8 +22,8 @@ const isSafe = (report: Array<number>): boolean => {
     previousChange = difference < 0 ? 'decrease' : 'increase';
   }
 
-  return true
-}
+  return true;
+};
 
 export function run(input: string): number {
   const reports = parseInput(input);
@@ -40,7 +39,7 @@ const isReallySafe = (report: Array<number>): boolean => {
   }
 
   return false;
-}
+};
 
 export function runAgain(input: string): number {
   const reports = parseInput(input);

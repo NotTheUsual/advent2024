@@ -1,12 +1,12 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { run, runAgain } from './day3';
 
-const input = await Bun.file(import.meta.dir + '/day3.input.txt').text();
+const input = await Bun.file(`${import.meta.dir}/day3.input.txt`).text();
 
 describe('Day 3', () => {
   describe('Part 1', () => {
     test('Test case', () => {
-      const example = `xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`;
+      const example = 'xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))';
       expect(run(example)).toBe(161);
     });
 
