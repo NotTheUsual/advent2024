@@ -11,23 +11,18 @@ describe('Day 3', () => {
     });
 
     test('Real', () => {
-      expect(run(input)).toBe(670);
+      expect(run(input)).toBe(183788984);
     });
   });
 
-//   describe('Part 2', () => {
-//     test('Test case', () => {
-//       const input = `7 6 4 2 1
-// 1 2 7 8 9
-// 9 7 6 2 1
-// 1 3 2 4 5
-// 8 6 4 4 1
-// 1 3 6 7 9`;
-//       expect(runAgain(input)).toBe(4);
-//     });
+  describe('Part 2', () => {
+    test('Test case', () => {
+      const example = `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`;
+      expect(runAgain(example)).toBe(48);
+    });
 
-//     test('Real', () => {
-//       expect(runAgain(day3Input)).toBe(22776016);
-//     });
-//   });
+    test('Real', () => {
+      expect(runAgain(input)).toBe(62098619);
+    });
+  });
 });
