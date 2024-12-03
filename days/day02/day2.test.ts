@@ -2,7 +2,7 @@ import { describe, test, expect } from 'bun:test';
 import { run, runAgain } from './day2';
 import day2Input from './day2.input';
 
-describe('Day 21', () => {
+describe('Day 2', () => {
   describe('Part 1', () => {
     test('Test case', () => {
       const input = `7 6 4 2 1
