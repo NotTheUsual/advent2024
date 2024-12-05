@@ -34,12 +34,59 @@ const findValidUpdates = (rules: Rules, updates: Updates): Updates => {
   });
 };
 
+const calculateScore = (updates: Updates): number => {
+  return updates.reduce((total, update) => {
+    const middleIndex = Math.floor(update.length / 2);
+    return total + Number.parseInt(update[middleIndex]);
+  }, 0);
+};
+
 export function run(input: string): number {
   const [rules, updates] = parseInput(input);
   const validUpdates = findValidUpdates(rules, updates);
 
-  return validUpdates.reduce((total, update) => {
-    const middleIndex = Math.floor(update.length / 2);
-    return total + Number.parseInt(update[middleIndex]);
-  }, 0);
+  return calculateScore(validUpdates);
+}
+
+const findInvalidUpdates = (rules: Rules, updates: Updates): Updates => {
+  const invalid: Updates = [];
+
+  for (const update of updates) {
+    const indices = update.reduce(
+      (lookup, page, index) => Object.assign(lookup, { [page]: index }),
+      {} as Record<string, number>
+    );
+
+    const isValid = update.every((page) => {
+      if (!rules[page]) return true;
+
+      return [...rules[page]].every((otherPage) => {
+        if (indices[otherPage] === undefined) return true;
+        return indices[page] < indices[otherPage];
+      });
+    });
+
+    if (!isValid) invalid.push(update);
+  }
+
+  return invalid;
+};
+
+const createUpdateSorter =
+  (rules: Rules) =>
+  (update: Array<string>): Array<string> => {
+    return update.toSorted((a, b) => {
+      if (rules[a]?.has(b)) return -1;
+      if (rules[b]?.has(a)) return 1;
+      return 0;
+    });
+  };
+
+export function runAgain(input: string): number {
+  const [rules, updates] = parseInput(input);
+  const invalidUpdates = findInvalidUpdates(rules, updates);
+  const sortByRules = createUpdateSorter(rules);
+  const validUpdates = invalidUpdates.map(sortByRules);
+
+  return calculateScore(validUpdates);
 }
