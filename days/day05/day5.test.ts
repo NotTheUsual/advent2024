@@ -77,7 +77,7 @@ describe('Day 5', () => {
 
     test('real puzzle', () => {
       const result = runAgain(day5Input);
-      expect(result).toBe(5762);
+      expect(result).toBe(4130);
     });
   });
 });

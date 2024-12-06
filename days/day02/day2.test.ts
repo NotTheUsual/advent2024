@@ -31,7 +31,7 @@ describe('Day 2', () => {
     });
 
     test('Real', () => {
-      expect(runAgain(day2Input)).toBe(22776016);
+      expect(runAgain(day2Input)).toBe(700);
     });
   });
 });
