@@ -3,7 +3,7 @@ interface Equation {
   values: Array<number>;
 }
 
-const OPERATIONS = ['+', '*'] as const;
+const OPERATIONS = ['+', '*', '||'] as const;
 type Operation = (typeof OPERATIONS)[number];
 
 const parseInput = (input: string): Array<Equation> => {
@@ -18,6 +18,7 @@ const parseInput = (input: string): Array<Equation> => {
 
 const operate = (operation: Operation, first: number, second: number): number => {
   if (operation === '+') return first + second;
+  if (operation === '||') return Number.parseInt(`${first}${second}`);
   return first * second;
 };
 
@@ -27,49 +28,63 @@ const runNextEvaluations = ({
   index,
   currentRunningTotal,
   values,
-  total
-}: { index: number; currentRunningTotal: number; values: Array<number>; total: number }): Array<PseudoResult> => {
+  total,
+  operations
+}: {
+  index: number;
+  currentRunningTotal: number;
+  values: Array<number>;
+  total: number;
+  operations: Array<Operation>;
+}): Array<PseudoResult> => {
   const nextValue = values[index];
   const isLastItem = index === values.length - 1;
 
-  return OPERATIONS.map((operation) => {
-    // console.log(`Running ${currentRunningTotal} ${operation} ${nextValue}`)
-    const nextRunningTotal = operate(operation, currentRunningTotal, nextValue);
-    if (nextRunningTotal > total) {
-      // console.log(`${nextRunningTotal} is larger than ${total}. Failing.`)
-      return null;
-    }
-    if (isLastItem) {
-      if (nextRunningTotal !== total) {
-        // console.log(`Final result ${nextRunningTotal} does not equal ${total}. Failing.`)
-        return null;
+  return operations
+    .map((operation) => {
+      const nextRunningTotal = operate(operation, currentRunningTotal, nextValue);
+      if (nextRunningTotal > total) return null;
+      if (isLastItem) {
+        if (nextRunningTotal !== total) return null;
+        return [operation];
       }
-      // console.log(`Final result ${nextRunningTotal} does equal ${total}! Returning.`)
-      return [operation];
-    }
-    const futureOperations = runNextEvaluations({
-      index: index + 1,
-      currentRunningTotal: nextRunningTotal,
-      values,
-      total
-    });
-    if (futureOperations.length === 0) return null;
-    return futureOperations.map((futureOperation) => operation + futureOperation);
-  }).filter((result) => result !== null);
+      const futureOperations = runNextEvaluations({
+        index: index + 1,
+        currentRunningTotal: nextRunningTotal,
+        values,
+        total,
+        operations
+      });
+      if (futureOperations.length === 0) return null;
+      return futureOperations.map((futureOperation) => operation + futureOperation);
+    })
+    .filter((result) => result !== null);
 };
 
-const evaluateEquation = ({ total, values }: Equation) => {
+const evaluateEquation = ({ total, values }: Equation, operations: Array<Operation>) => {
   const startingIndex = 1;
   const initialValue = values[0];
 
-  return runNextEvaluations({ index: startingIndex, currentRunningTotal: initialValue, total, values });
+  return runNextEvaluations({ index: startingIndex, currentRunningTotal: initialValue, total, values, operations });
 };
 
 export function run(input: string): number {
+  const operations: Array<Operation> = ['*', '+'];
   const tests = parseInput(input);
 
   return tests.reduce((total, test) => {
-    const result = evaluateEquation(test);
+    const result = evaluateEquation(test, operations);
+    const additon = result.length ? test.total : 0;
+    return total + additon;
+  }, 0);
+}
+
+export function runAgain(input: string): number {
+  const tests = parseInput(input);
+  const operations: Array<Operation> = ['*', '+', '||'];
+
+  return tests.reduce((total, test) => {
+    const result = evaluateEquation(test, operations);
     const additon = result.length ? test.total : 0;
     return total + additon;
   }, 0);

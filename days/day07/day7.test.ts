@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { run } from './day7';
-import { runAgain } from './day7b';
+import { run, runAgain } from './day7';
 import day7Input from './day7.input';
 
 describe('Day 7', () => {
