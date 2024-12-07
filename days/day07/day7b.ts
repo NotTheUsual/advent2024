@@ -3,7 +3,7 @@ interface Equation {
   values: Array<number>;
 }
 
-const OPERATIONS = ['+', '*'] as const;
+const OPERATIONS = ['+', '*', '||'] as const;
 type Operation = (typeof OPERATIONS)[number];
 
 const parseInput = (input: string): Array<Equation> => {
@@ -18,6 +18,7 @@ const parseInput = (input: string): Array<Equation> => {
 
 const operate = (operation: Operation, first: number, second: number): number => {
   if (operation === '+') return first + second;
+  if (operation === '||') return Number.parseInt(`${first}${second}`);
   return first * second;
 };
 
@@ -65,7 +66,7 @@ const evaluateEquation = ({ total, values }: Equation) => {
   return runNextEvaluations({ index: startingIndex, currentRunningTotal: initialValue, total, values });
 };
 
-export function run(input: string): number {
+export function runAgain(input: string): number {
   const tests = parseInput(input);
 
   return tests.reduce((total, test) => {
