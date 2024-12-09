@@ -57,3 +57,60 @@ export function run(input: string): number {
   const updatedLayout = rearrangeEverything(fileLayout);
   return calculateChecksum(updatedLayout);
 }
+
+const parseInputAgain = (input: string): Array<Array<number> | Array<'.'>> => {
+  const diskMap = input.split('').map((character) => Number.parseInt(character));
+  let id = 0;
+  return diskMap.map((digit, index) => {
+    const type = index % 2 === 0 ? 'file' : 'space';
+
+    if (type === 'file') {
+      const values = [...Array(digit)].map(() => id);
+      id += 1;
+      return values;
+    }
+    // type === 'space'
+    const values: Array<'.'> = [...Array(digit)].map(() => '.');
+    return values;
+  });
+};
+
+const rearrangeEverythingAgain = (fileLayout: Array<Array<number> | Array<'.'>>): Array<Array<number> | Array<'.'>> => {
+  const changedLayout = structuredClone(fileLayout);
+
+  for (let index = fileLayout.length - 1; index >= 0; index -= 1) {
+    const charSet = fileLayout[index];
+    const character = charSet[0];
+    if (!character || character === '.') continue;
+    const spaceNeeded = charSet.length;
+
+    for (let targetIndex = 0; targetIndex <= changedLayout.length; targetIndex += 1) {
+      const targetCharSet = changedLayout[targetIndex];
+      if (!targetCharSet) continue;
+      const targetCharacter = targetCharSet[0];
+      if (targetCharacter === character) break;
+      if (targetCharacter !== '.') continue;
+      if (targetCharSet.length < spaceNeeded) continue;
+
+      const oldChangedIndex = changedLayout.findIndex((set) => set[0] === character);
+      changedLayout[oldChangedIndex] = [...Array(charSet.length)].map(() => '.' as const);
+
+      changedLayout.splice(
+        targetIndex,
+        1,
+        charSet,
+        [...Array(targetCharSet.length - charSet.length)].map(() => '.' as const)
+      );
+
+      break;
+    }
+  }
+
+  return changedLayout;
+};
+
+export function runAgain(input: string): number {
+  const fileLayout = parseInputAgain(input);
+  const updatedLayout = rearrangeEverythingAgain(fileLayout);
+  return calculateChecksum(updatedLayout.flat());
+}
