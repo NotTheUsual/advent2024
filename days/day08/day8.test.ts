@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { run } from './day8';
+import { run, runAgain } from './day8';
 import day8Input from './day8.input';
 
 describe('Day 8', () => {
@@ -22,6 +22,29 @@ describe('Day 8', () => {
 
     test('real puzzle', () => {
       const result = run(day8Input);
+      expect(result).toBe(254);
+    });
+  });
+
+  describe('part 2', () => {
+    test('test case', () => {
+      const input = `............
+........0...
+.....0......
+.......0....
+....0.......
+......A.....
+............
+............
+........A...
+.........A..
+............
+............`;
+      expect(runAgain(input)).toBe(34);
+    });
+
+    test('real puzzle', () => {
+      const result = runAgain(day8Input);
       expect(result).toBe(254);
     });
   });
