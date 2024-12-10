@@ -54,3 +54,21 @@ export function run(input: string): number {
   });
   return scores.reduce(sum);
 }
+
+const scoreTrailFrom = (point: Point, map: TopographicMap): number => {
+  const height = map.valueAt(point);
+  const neighbours = map.neighboursOf(point);
+  return neighbours.map((neighbour) => {
+    const neighbouringHeight = map.valueAt(neighbour);
+    if (neighbouringHeight !== height + 1) return 0;
+    if (neighbouringHeight === 9) return 1;
+    return scoreTrailFrom(neighbour, map);
+  }).reduce(sum);
+};
+
+export function runAgain(input: string): number {
+  const { map, trailheads } = parseInput(input);
+  const scores = trailheads.map((trailhead) => scoreTrailFrom(trailhead, map));
+  return scores.reduce(sum)
+
+}
