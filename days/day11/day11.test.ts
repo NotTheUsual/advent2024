@@ -20,5 +20,11 @@ describe('Day 11', () => {
       expect(result).toBe(183484);
     });
   });
-});
 
+  describe('part 2', () => {
+    test('real puzzle - 2', () => {
+      const result = run('8069 87014 98 809367 525 0 9494914 5', 75);
+      expect(result).toBe(218817038947400); // [36.36ms]
+    });
+  })
+});

@@ -9,20 +9,33 @@ const splitStone = (stone: string): Array<string> => {
   return split;
 };
 
+const fullCache: Record<string, Record<number, number>> = {};
+
+const getCachedScore = (stone: string, iterations: number): number => {
+  if (fullCache[stone]?.[iterations]) return fullCache[stone]?.[iterations];
+  const score = scoreStone(stone, iterations);
+  fullCache[stone] ||= {};
+  fullCache[stone][iterations] = score;
+  return score;
+};
+
 const scoreStone = (stone: string, iterations: number): number => {
   if (iterations === 0) return 1;
+  const remainingIterations = iterations - 1;
 
-  if (stone === '0') return scoreStone('1', iterations - 1);
+  if (stone === '0') {
+    return getCachedScore('1', remainingIterations);
+  }
 
   if (stone.length % 2 === 0) {
     const result = splitStone(stone)
-      .map((newStone) => scoreStone(newStone, iterations - 1))
+      .map((newStone) => getCachedScore(newStone, remainingIterations))
       .reduce((total, score) => total + score);
     return result;
   }
 
   const newStone = `${Number.parseInt(stone) * 2024}`;
-  return scoreStone(newStone, iterations - 1);
+  return getCachedScore(newStone, remainingIterations);
 };
 
 export function run(input: string, iterations: number): number {
