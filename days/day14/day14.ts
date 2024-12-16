@@ -63,3 +63,21 @@ export function run(input: string, gridDimensions: { width: number; height: numb
 
   return scoreResults({ bots: movedBots, gridDimensions });
 }
+
+export function runAgain(input: string, gridDimensions: { width: number; height: number }) {
+  const bots = parseInput(input);
+  let iterations = 10;
+  const interesting: Array<number> = [];
+
+  while (iterations < 20_000) {
+    const movedBots = runTheNumbers({ bots, gridDimensions, iterations });
+    const stringBots = movedBots.map(bot => `${bot.x},${bot.y}`);
+    const hasDuplicates = stringBots.find((bot, index) => stringBots.indexOf(bot) !== index);
+
+    if (!hasDuplicates) interesting.push(iterations);
+    iterations += 1;
+
+  }
+
+  console.log({ interesting });
+}
